@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuestSea – Explore. Learn. Innovate.</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════
+   TOKENS
+════════════════════════════════════════════ */
+:root {
+  --bg:        #111310;   /* near-black charcoal with green undertone */
+  --bg-2:      #181c16;
+  --bg-3:      #1e231b;
+  --bg-card:   #161a14;
+  --green:     #2dce72;   /* electric emerald */
+  --green-dim: #1fa358;
+  --green-glow:rgba(45,206,114,0.18);
+  --cream:     #f0e8d5;   /* warm cream */
+  --cream-dim: #c8bfaa;
+  --orange:    #f07a2d;   /* warm accent */
+  --red:       #e84545;
+  --border:    rgba(45,206,114,0.14);
+  --border-2:  rgba(240,232,213,0.08);
+  --muted:     #6b7560;
+  --white:     #edefea;
+  --shadow:    0 24px 60px rgba(0,0,0,0.55);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--white);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--green-dim);border-radius:2px; }
+
+/* ════════════════════════════════════════════
+   NAV
+════════════════════════════════════════════ */
+nav {
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 52px;height:66px;
+  background:rgba(17,19,16,0.82);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(45,206,114,0.08);
+}
+
+.logo {
+  display:flex;align-items:center;gap:11px;
+  text-decoration:none;
+}
+.logo-mark {
+  width:36px;height:36px;border-radius:10px;
+  background:var(--green);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;line-height:1;
+  box-shadow:0 0 20px rgba(45,206,114,0.4);
+}
+.logo-text {
+  font-family:'Playfair Display',serif;
+  font-size:1.25rem;font-weight:800;
+  color:var(--cream);letter-spacing:-.01em;
+}
+.logo-text em { font-style:normal;color:var(--green); }
+
+.nav-center { display:flex;gap:30px; }
+.nav-center a {
+  font-size:13.5px;font-weight:500;color:var(--muted);
+  text-decoration:none;letter-spacing:.02em;
+  transition:color .2s;
+}
+.nav-center a:hover { color:var(--cream); }
+
+.nav-right { display:flex;align-items:center;gap:14px; }
+.nav-pill {
+  font-size:13px;font-weight:600;color:var(--bg);
+  background:var(--green);
+  padding:9px 22px;border-radius:8px;
+  text-decoration:none;letter-spacing:.01em;
+  transition:background .2s,box-shadow .2s,transform .15s;
+  box-shadow:0 0 0 rgba(45,206,114,0);
+}
+.nav-pill:hover {
+  background:#38e07f;
+  box-shadow:0 4px 22px rgba(45,206,114,0.45);
+  transform:translateY(-1px);
+}
+
+/* ════════════════════════════════════════════
+   HERO
+════════════════════════════════════════════ */
+.hero {
+  position:relative;
+  min-height:100vh;
+  display:flex;align-items:center;
+  padding:100px 52px 80px;
+  overflow:hidden;
+}
+
+/* layered backgrounds */
+.hero-bg {
+  position:absolute;inset:0;pointer-events:none;
+}
+.hero-bg .noise {
+  position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity:.6;
+}
+.hero-bg .glow1 {
+  position:absolute;width:700px;height:700px;
+  top:-120px;right:-80px;
+  background:radial-gradient(circle, rgba(45,206,114,0.1) 0%, transparent 65%);
+  animation:slowspin 30s linear infinite;
+}
+.hero-bg .glow2 {
+  position:absolute;width:500px;height:500px;
+  bottom:-60px;left:5%;
+  background:radial-gradient(circle, rgba(240,122,45,0.07) 0%, transparent 65%);
+  animation:slowspin 40s linear infinite reverse;
+}
+.hero-bg .grid {
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(45,206,114,0.04) 1px, transparent 1px),
+    linear-gradient(90deg,rgba(45,206,114,0.04) 1px, transparent 1px);
+  background-size:64px 64px;
+}
+@keyframes slowspin { to{transform:rotate(360deg)} }
+
+/* left: text */
+.hero-content {
+  position:relative;z-index:2;
+  max-width:680px;
+}
+
+.tag-row {
+  display:flex;align-items:center;gap:10px;margin-bottom:30px;
+  animation:fadeUp .6s ease both;
+}
+.tag {
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(45,206,114,0.1);
+  border:1px solid rgba(45,206,114,0.28);
+  border-radius:100px;padding:6px 16px;
+  font-size:12px;font-weight:600;color:var(--green);letter-spacing:.07em;text-transform:uppercase;
+}
+.tag .dot { width:5px;height:5px;background:var(--green);border-radius:50%;animation:blink 2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:.3} }
+
+.hero-year {
+  font-size:12px;color:var(--muted);font-weight:500;letter-spacing:.04em;
+}
+
+.hero h1 {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(3.2rem,6.5vw,5.8rem);
+  font-weight:800;line-height:1.05;
+  letter-spacing:-.02em;color:var(--cream);
+  animation:fadeUp .7s .08s ease both;
+}
+.hero h1 .line-g { color:var(--green); }
+.hero h1 .line-i { font-style:italic; }
+
+.hero-desc {
+  margin-top:24px;
+  font-size:clamp(.95rem,1.5vw,1.1rem);
+  color:var(--muted);line-height:1.8;max-width:520px;
+  animation:fadeUp .7s .16s ease both;
+}
+
+.hero-actions {
+  margin-top:40px;
+  display:flex;gap:14px;flex-wrap:wrap;
+  animation:fadeUp .7s .24s ease both;
+}
+.btn-g {
+  background:var(--green);color:var(--bg);
+  padding:14px 32px;border-radius:9px;font-size:14.5px;font-weight:700;
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;letter-spacing:.01em;
+  transition:background .2s,transform .15s,box-shadow .2s;
+  box-shadow:0 4px 24px rgba(45,206,114,0.35);
+}
+.btn-g:hover { background:#38e07f;transform:translateY(-2px);box-shadow:0 8px 36px rgba(45,206,114,0.5); }
+.btn-o {
+  background:transparent;color:var(--cream);
+  border:1px solid rgba(240,232,213,0.2);
+  padding:14px 28px;border-radius:9px;font-size:14.5px;font-weight:500;
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+  transition:border-color .2s,background .2s;
+}
+.btn-o:hover { border-color:var(--green);background:rgba(45,206,114,0.07); }
+
+/* right: stat card cluster */
+.hero-right {
+  position:absolute;right:52px;top:50%;transform:translateY(-50%);
+  z-index:2;display:flex;flex-direction:column;gap:14px;
+  animation:fadeLeft .8s .3s ease both;
+}
+@keyframes fadeLeft { from{opacity:0;transform:translateY(-50%) translateX(30px)} to{opacity:1;transform:translateY(-50%) translateX(0)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none} }
+
+.stat-card {
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:14px;padding:20px 24px;min-width:190px;
+  display:flex;align-items:center;gap:16px;
+  transition:border-color .2s,transform .2s;
+}
+.stat-card:hover { border-color:rgba(45,206,114,0.35);transform:translateX(-4px); }
+.sc-icon {
+  width:42px;height:42px;border-radius:11px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.sc-icon.g { background:rgba(45,206,114,0.12);border:1px solid rgba(45,206,114,0.2); }
+.sc-icon.o { background:rgba(240,122,45,0.12);border:1px solid rgba(240,122,45,0.2); }
+.sc-icon.r { background:rgba(232,69,69,0.1);border:1px solid rgba(232,69,69,0.18); }
+.sc-icon.c { background:rgba(240,232,213,0.08);border:1px solid rgba(240,232,213,0.12); }
+.sc-num {
+  font-family:'Playfair Display',serif;
+  font-size:1.55rem;font-weight:700;color:var(--cream);display:block;line-height:1;
+}
+.sc-lbl { font-size:11.5px;color:var(--muted);margin-top:3px; }
+
+/* ════════════════════════════════════════════
+   SHARED SECTION STYLES
+════════════════════════════════════════════ */
+section { padding:88px 52px; }
+.wrap { max-width:1140px;margin:0 auto; }
+.s-eye  { font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;color:var(--green);margin-bottom:10px; }
+.s-head {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2rem,4vw,3rem);font-weight:800;line-height:1.1;color:var(--cream);margin-bottom:14px;
+}
+.s-head em { font-style:italic;color:var(--green); }
+.s-sub  { font-size:1rem;color:var(--muted);max-width:500px;line-height:1.78; }
+
+/* ════════════════════════════════════════════
+   MARQUEE STRIP
+════════════════════════════════════════════ */
+.strip {
+  background:var(--green);
+  padding:14px 0;overflow:hidden;
+  border-top:1px solid rgba(0,0,0,0.15);
+  border-bottom:1px solid rgba(0,0,0,0.1);
+}
+.strip-track {
+  display:flex;gap:0;
+  white-space:nowrap;
+  animation:marquee 22s linear infinite;
+}
+.strip-item {
+  display:inline-flex;align-items:center;gap:12px;
+  padding:0 28px;
+  font-size:13px;font-weight:700;color:var(--bg);
+  letter-spacing:.06em;text-transform:uppercase;flex-shrink:0;
+}
+.strip-dot { width:5px;height:5px;background:rgba(17,19,16,0.35);border-radius:50%; }
+@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ════════════════════════════════════════════
+   WHAT WE DO
+════════════════════════════════════════════ */
+.what { background:var(--bg-2); }
+.what-grid {
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+  gap:18px;margin-top:52px;
+}
+.wc {
+  background:var(--bg-card);
+  border:1px solid var(--border-2);
+  border-radius:16px;padding:28px 24px;
+  position:relative;overflow:hidden;
+  transition:border-color .25s,transform .25s,box-shadow .25s;
+}
+.wc::before {
+  content:'';position:absolute;
+  bottom:-40px;right:-40px;
+  width:100px;height:100px;border-radius:50%;
+  background:var(--green-glow);
+  transition:transform .4s;
+}
+.wc:hover { border-color:rgba(45,206,114,0.3);transform:translateY(-4px);box-shadow:var(--shadow); }
+.wc:hover::before { transform:scale(2.2); }
+.wc-ico {
+  font-size:26px;margin-bottom:18px;display:block;
+  position:relative;z-index:1;
+}
+.wc h3 { font-size:16px;font-weight:700;color:var(--cream);margin-bottom:8px;position:relative;z-index:1; }
+.wc p  { font-size:13.5px;color:var(--muted);line-height:1.7;position:relative;z-index:1; }
+
+/* ════════════════════════════════════════════
+   TOPICS CHIPS
+════════════════════════════════════════════ */
+.topics { background:var(--bg-3); }
+.chip-grid {
+  display:flex;flex-wrap:wrap;gap:12px;margin-top:52px;
+}
+.chip {
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--bg-card);
+  border:1px solid var(--border-2);
+  border-radius:100px;padding:11px 20px;
+  font-size:13px;font-weight:600;color:var(--cream-dim);
+  transition:border-color .2s,color .2s,background .2s,transform .2s;
+  cursor:default;
+}
+.chip:hover {
+  border-color:var(--green);color:var(--green);
+  background:rgba(45,206,114,0.06);
+  transform:translateY(-2px);
+}
+.chip-n {
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(45,206,114,0.12);color:var(--green);
+  font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+
+/* ════════════════════════════════════════════
+   GUIDES
+════════════════════════════════════════════ */
+.guides { background:var(--bg-2); }
+.guides-grid {
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:20px;margin-top:52px;
+}
+.gc {
+  background:var(--bg-card);
+  border:1px solid var(--border-2);
+  border-radius:18px;overflow:hidden;
+  display:flex;flex-direction:column;
+  transition:border-color .25s,transform .25s,box-shadow .25s;
+}
+.gc:hover { border-color:rgba(45,206,114,0.35);transform:translateY(-5px);box-shadow:var(--shadow); }
+.gc-bar { height:4px; }
+.gc-bar.a { background:linear-gradient(90deg,var(--green),#00d4a8); }
+.gc-bar.b { background:linear-gradient(90deg,#a78bfa,#60a5fa); }
+.gc-bar.c { background:linear-gradient(90deg,var(--orange),#f5b833); }
+.gc-body { padding:26px 22px;flex:1;display:flex;flex-direction:column;gap:10px; }
+.gc-label {
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  color:var(--green);align-self:flex-start;
+}
+.gc h3 { font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--cream);line-height:1.35; }
+.gc p  { font-size:13px;color:var(--muted);line-height:1.68;flex:1; }
+.gc-foot {
+  padding:14px 22px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid rgba(45,206,114,0.07);
+}
+.gc-meta { font-size:11.5px;color:var(--muted); }
+.gc-link {
+  font-size:13px;font-weight:700;color:var(--green);
+  text-decoration:none;display:flex;align-items:center;gap:5px;
+  transition:gap .2s;
+}
+.gc-link:hover { gap:9px; }
+
+/* ════════════════════════════════════════════
+   ABOUT — two-column editorial
+════════════════════════════════════════════ */
+.about { background:var(--bg); }
+.about-layout {
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;
+  margin-top:56px;
+}
+@media(max-width:800px){ .about-layout{grid-template-columns:1fr;gap:40px;} }
+.about-text p {
+  font-size:15px;color:var(--muted);line-height:1.85;margin-bottom:20px;
+}
+.about-text strong { color:var(--cream); }
+.about-text .hl { color:var(--green);font-weight:600; }
+
+.about-pills { display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;margin-bottom:28px; }
+.a-pill {
+  font-size:11.5px;font-weight:600;letter-spacing:.05em;
+  padding:5px 14px;border-radius:100px;
+  background:rgba(45,206,114,0.09);
+  border:1px solid rgba(45,206,114,0.22);
+  color:var(--green);
+}
+
+.about-cards { display:flex;flex-direction:column;gap:14px; }
+.ac {
+  background:var(--bg-card);
+  border:1px solid var(--border-2);
+  border-radius:14px;padding:22px 20px;
+  display:flex;align-items:center;gap:18px;
+  transition:border-color .2s,transform .2s;
+}
+.ac:hover { border-color:rgba(45,206,114,0.3);transform:translateX(4px); }
+.ac-icon {
+  width:46px;height:46px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.ac-icon.g { background:rgba(45,206,114,0.1);border:1px solid rgba(45,206,114,0.2); }
+.ac-icon.o { background:rgba(240,122,45,0.1);border:1px solid rgba(240,122,45,0.2); }
+.ac-icon.r { background:rgba(232,69,69,0.1); border:1px solid rgba(232,69,69,0.18); }
+.ac-icon.c { background:rgba(240,232,213,0.06);border:1px solid rgba(240,232,213,0.1); }
+.ac-text strong { font-size:15px;font-weight:700;color:var(--cream);display:block;margin-bottom:3px; }
+.ac-text span  { font-size:12.5px;color:var(--muted); }
+
+/* mission bar */
+.mission-bar {
+  margin-top:14px;
+  background:linear-gradient(135deg,rgba(45,206,114,0.1),rgba(240,122,45,0.07));
+  border:1px solid rgba(45,206,114,0.2);
+  border-radius:14px;padding:20px 22px;
+  display:flex;align-items:center;gap:14px;
+}
+.mission-bar .mb-icon { font-size:24px;flex-shrink:0; }
+.mission-bar p { font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--cream);line-height:1.5; }
+.mission-bar p em { font-style:italic;color:var(--green); }
+
+/* ════════════════════════════════════════════
+   WHY QUESTSEA
+════════════════════════════════════════════ */
+.why { background:var(--bg-3); }
+.why-grid {
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:16px;margin-top:52px;
+}
+.wyc {
+  background:var(--bg-card);
+  border:1px solid var(--border-2);
+  border-radius:14px;padding:24px 20px;
+  transition:border-color .2s,transform .2s;
+}
+.wyc:hover { border-color:rgba(45,206,114,0.3);transform:translateY(-3px); }
+.wyc-num {
+  font-family:'Playfair Display',serif;
+  font-size:2rem;font-weight:700;color:rgba(45,206,114,0.18);
+  margin-bottom:14px;line-height:1;
+}
+.wyc h3 { font-size:14.5px;font-weight:700;color:var(--cream);margin-bottom:7px; }
+.wyc p  { font-size:13px;color:var(--muted);line-height:1.68; }
+
+/* ════════════════════════════════════════════
+   CTA
+════════════════════════════════════════════ */
+.cta { background:var(--bg-2);padding:96px 52px;text-align:center; }
+.cta-box {
+  max-width:660px;margin:0 auto;
+  background:var(--bg-card);
+  border:1px solid rgba(45,206,114,0.2);
+  border-radius:24px;padding:64px 52px;
+  position:relative;overflow:hidden;
+}
+.cta-box::before {
+  content:'';position:absolute;
+  width:400px;height:400px;
+  top:-150px;left:50%;transform:translateX(-50%);
+  background:radial-gradient(circle,rgba(45,206,114,0.1) 0%,transparent 65%);
+  pointer-events:none;
+}
+.cta-box > * { position:relative;z-index:1; }
+.cta-box h2 {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.9rem,4vw,2.8rem);font-weight:800;
+  color:var(--cream);line-height:1.15;margin-bottom:14px;
+}
+.cta-box h2 em { font-style:italic;color:var(--green); }
+.cta-box p { font-size:1rem;color:var(--muted);line-height:1.75;margin-bottom:34px;max-width:460px;margin-left:auto;margin-right:auto; }
+.cta-row { display:flex;gap:12px;justify-content:center;flex-wrap:wrap; }
+
+/* ════════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════════ */
+footer {
+  background:var(--bg);
+  border-top:1px solid rgba(45,206,114,0.08);
+  padding:52px 52px 28px;
+}
+.footer-grid {
+  display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;gap:52px;
+  padding-bottom:40px;border-bottom:1px solid rgba(240,232,213,0.05);
+}
+@media(max-width:800px){ .footer-grid{grid-template-columns:1fr 1fr;gap:32px;} }
+
+.f-brand p { font-size:13.5px;color:var(--muted);line-height:1.8;margin-top:14px;max-width:270px; }
+.f-col h5 {
+  font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;
+  color:var(--cream-dim);margin-bottom:16px;
+}
+.f-col a {
+  display:block;font-size:13px;color:var(--muted);text-decoration:none;
+  margin-bottom:10px;transition:color .2s;
+}
+.f-col a:hover { color:var(--green); }
+
+.footer-bottom {
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:26px;flex-wrap:wrap;gap:12px;
+}
+.footer-bottom p { font-size:12px;color:var(--muted); }
+.footer-bottom span { color:var(--green); }
+.socials { display:flex;gap:10px; }
+.soc {
+  width:34px;height:34px;border-radius:9px;
+  border:1px solid rgba(240,232,213,0.08);
+  background:rgba(240,232,213,0.03);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:var(--muted);text-decoration:none;
+  transition:border-color .2s,color .2s,background .2s;
+}
+.soc:hover { border-color:var(--green);color:var(--green);background:rgba(45,206,114,0.08); }
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-mark">🧭</div>
+    <span class="logo-text">Quest<em>Sea</em></span>
+  </a>
+  <div class="nav-center">
+    <a href="#topics">Topics</a>
+    <a href="#guides">Guides</a>
+    <a href="#about">About</a>
+    <a href="#why">Why Us</a>
+  </div>
+  <div class="nav-right">
+    <a href="senior-dotnet-interview-guide-2026.html" class="nav-pill">Interview Guide →</a>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-bg">
+    <div class="noise"></div>
+    <div class="grid"></div>
+    <div class="glow1"></div>
+    <div class="glow2"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="tag-row">
+      <div class="tag"><span class="dot"></span>Technology Learning Platform</div>
+      <span class="hero-year">Est. 2024</span>
+    </div>
+    <h1>
+      <span class="line-g">Explore.</span><br>
+      <span class="line-i">Learn.</span><br>
+      Innovate.
+    </h1>
+    <p class="hero-desc">
+      QuestSea helps developers and tech enthusiasts grow their skills and build successful careers — through structured interview guides, real-world tutorials, and practical resources on modern technologies.
+    </p>
+    <div class="hero-actions">
+      <a href="#guides" class="btn-g">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        Browse Guides
+      </a>
+      <a href="#about" class="btn-o">
+        About QuestSea
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- stat cards floating right -->
+  <div class="hero-right">
+    <div class="stat-card">
+      <div class="sc-icon g">📖</div>
+      <div>
+        <span class="sc-num">200+</span>
+        <div class="sc-lbl">Interview Questions</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon o">🗂️</div>
+      <div>
+        <span class="sc-num">100+</span>
+        <div class="sc-lbl">Topics Covered</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon r">🚀</div>
+      <div>
+        <span class="sc-num">3+</span>
+        <div class="sc-lbl">Years Exp. Target</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon c">🎯</div>
+      <div>
+        <span class="sc-num">100%</span>
+        <div class="sc-lbl">Interview Ready</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MARQUEE ══ -->
+<div class="strip">
+  <div class="strip-track">
+    <!-- duplicate for seamless loop -->
+    <span class="strip-item"><span class="strip-dot"></span>.NET Core</span>
+    <span class="strip-item"><span class="strip-dot"></span>ASP.NET Core</span>
+    <span class="strip-item"><span class="strip-dot"></span>Web API</span>
+    <span class="strip-item"><span class="strip-dot"></span>React & TypeScript</span>
+    <span class="strip-item"><span class="strip-dot"></span>SQL Server</span>
+    <span class="strip-item"><span class="strip-dot"></span>Azure Cloud</span>
+    <span class="strip-item"><span class="strip-dot"></span>Microservices</span>
+    <span class="strip-item"><span class="strip-dot"></span>Clean Architecture</span>
+    <span class="strip-item"><span class="strip-dot"></span>System Design</span>
+    <span class="strip-item"><span class="strip-dot"></span>Design Patterns</span>
+    <span class="strip-item"><span class="strip-dot"></span>Entity Framework</span>
+    <span class="strip-item"><span class="strip-dot"></span>CI/CD & DevOps</span>
+    <!-- repeat -->
+    <span class="strip-item"><span class="strip-dot"></span>.NET Core</span>
+    <span class="strip-item"><span class="strip-dot"></span>ASP.NET Core</span>
+    <span class="strip-item"><span class="strip-dot"></span>Web API</span>
+    <span class="strip-item"><span class="strip-dot"></span>React & TypeScript</span>
+    <span class="strip-item"><span class="strip-dot"></span>SQL Server</span>
+    <span class="strip-item"><span class="strip-dot"></span>Azure Cloud</span>
+    <span class="strip-item"><span class="strip-dot"></span>Microservices</span>
+    <span class="strip-item"><span class="strip-dot"></span>Clean Architecture</span>
+    <span class="strip-item"><span class="strip-dot"></span>System Design</span>
+    <span class="strip-item"><span class="strip-dot"></span>Design Patterns</span>
+    <span class="strip-item"><span class="strip-dot"></span>Entity Framework</span>
+    <span class="strip-item"><span class="strip-dot"></span>CI/CD & DevOps</span>
+  </div>
+</div>
+
+<!-- ══ WHAT WE DO ══ -->
+<section class="what">
+  <div class="wrap">
+    <div class="s-eye">What We Do</div>
+    <h2 class="s-head">Learn Faster.<br><em>Build Better.</em></h2>
+    <p class="s-sub">Practical, structured resources built for developers who want real results — not just theory.</p>
+    <div class="what-grid">
+      <div class="wc">
+        <span class="wc-ico">📋</span>
+        <h3>Interview Preparation</h3>
+        <p>Structured Q&amp;A guides with detailed answers, real-world examples, common mistakes, and follow-up questions for senior roles.</p>
+      </div>
+      <div class="wc">
+        <span class="wc-ico">🎥</span>
+        <h3>Tutorials &amp; Content</h3>
+        <p>High-quality tutorials on modern technologies — from .NET and React to cloud architecture, available on our YouTube channel.</p>
+      </div>
+      <div class="wc">
+        <span class="wc-ico">🗺️</span>
+        <h3>Career Roadmaps</h3>
+        <p>Step-by-step learning paths that guide developers at every level toward their next role with clarity and confidence.</p>
+      </div>
+      <div class="wc">
+        <span class="wc-ico">⚡</span>
+        <h3>Cheat Sheets &amp; References</h3>
+        <p>Quick-reference tables, architecture diagrams, and cheat sheets — ready to download, print, or study anywhere.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TOPICS ══ -->
+<section id="topics" class="topics">
+  <div class="wrap">
+    <div class="s-eye">Technologies</div>
+    <h2 class="s-head">What We Cover</h2>
+    <p class="s-sub">All the domains a modern full-stack developer needs to master — covered in depth.</p>
+    <div class="chip-grid">
+      <div class="chip"><span class="chip-n">01</span>C# &amp; .NET Core</div>
+      <div class="chip"><span class="chip-n">02</span>ASP.NET Core</div>
+      <div class="chip"><span class="chip-n">03</span>Web API &amp; REST</div>
+      <div class="chip"><span class="chip-n">04</span>Entity Framework Core</div>
+      <div class="chip"><span class="chip-n">05</span>SQL Server &amp; T-SQL</div>
+      <div class="chip"><span class="chip-n">06</span>React &amp; TypeScript</div>
+      <div class="chip"><span class="chip-n">07</span>Azure Cloud</div>
+      <div class="chip"><span class="chip-n">08</span>Microservices</div>
+      <div class="chip"><span class="chip-n">09</span>Design Patterns</div>
+      <div class="chip"><span class="chip-n">10</span>System Design</div>
+      <div class="chip"><span class="chip-n">11</span>Clean Architecture</div>
+      <div class="chip"><span class="chip-n">12</span>CI/CD &amp; DevOps</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ GUIDES ══ -->
+<section id="guides" class="guides">
+  <div class="wrap">
+    <div class="s-eye">Featured Guides</div>
+    <h2 class="s-head">Interview-Ready <em>Resources</em></h2>
+    <p class="s-sub">Carefully crafted guides built from real interview experience — structured, concise, and practical.</p>
+    <div class="guides-grid">
+      <div class="gc">
+        <div class="gc-bar a"></div>
+        <div class="gc-body">
+          <span class="gc-label">Senior Level · 2026</span>
+          <h3>Complete Senior .NET Interview Guide</h3>
+          <p>200+ questions covering C#, ASP.NET Core, Web API, EF Core, SQL Server, Azure, Microservices, Design Patterns, and System Design — with real-world answers and cheat sheets.</p>
+        </div>
+        <div class="gc-foot">
+          <span class="gc-meta">200+ Q&amp;A · PDF Download</span>
+          <a href="senior-dotnet-interview-guide-2026.html" class="gc-link">Open Guide <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+        </div>
+      </div>
+      <div class="gc">
+        <div class="gc-bar b"></div>
+        <div class="gc-body">
+          <span class="gc-label">C# Deep Dive</span>
+          <h3>Advanced C# Concepts Cheat Sheet</h3>
+          <p>LINQ, async/await, delegates, generics, memory management, and advanced patterns — explained with real-world production examples and common interview pitfalls.</p>
+        </div>
+        <div class="gc-foot">
+          <span class="gc-meta">Coming Soon</span>
+          <a href="#" class="gc-link">Notify Me <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+        </div>
+      </div>
+      <div class="gc">
+        <div class="gc-bar c"></div>
+        <div class="gc-body">
+          <span class="gc-label">Full Stack · Bonus</span>
+          <h3>.NET Full Stack Developer Q&amp;A Pack</h3>
+          <p>Frontend (React/TypeScript), Backend (.NET Core), Web API, Database, Authentication (JWT), and Azure Deployment — real full-stack interview scenarios included.</p>
+        </div>
+        <div class="gc-foot">
+          <span class="gc-meta">Included in .NET Guide</span>
+          <a href="senior-dotnet-interview-guide-2026.html#downloads" class="gc-link">Download <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ABOUT ══ -->
+<section id="about" class="about">
+  <div class="wrap">
+    <div class="s-eye">About QuestSea</div>
+    <h2 class="s-head">Who We Are</h2>
+    <div class="about-layout">
+      <div class="about-text">
+        <p>
+          <strong>QuestSea</strong> is a technology learning platform dedicated to helping developers and tech enthusiasts <span class="hl">grow their skills and build successful careers</span>.
+        </p>
+        <p>
+          We create <strong>high-quality content, tutorials, interview preparation guides, and practical resources on real-world technologies</strong> — designed for developers who want to go beyond theory and actually perform better, switch jobs with confidence, and grow professionally.
+        </p>
+        <p>
+          Whether you're preparing for a senior .NET interview, learning Clean Architecture, or building your first full-stack application — QuestSea is the compass that guides your journey.
+        </p>
+        <p>
+          Our content is structured around <strong>industry best practices</strong>, delivered in clean formats you can use anywhere — detailed PDFs, quick-reference cheat sheets, and video tutorials.
+        </p>
+        <div class="about-pills">
+          <span class="a-pill">Interview Prep</span>
+          <span class="a-pill">Real-world Examples</span>
+          <span class="a-pill">Best Practices</span>
+          <span class="a-pill">Career Growth</span>
+          <span class="a-pill">Free Resources</span>
+        </div>
+        <div class="mission-bar">
+          <span class="mb-icon">🧭</span>
+          <p><em>Explore. Learn. Innovate.</em> — the QuestSea mission guiding every piece of content we create.</p>
+        </div>
+      </div>
+      <div class="about-cards">
+        <div class="ac">
+          <div class="ac-icon g">📖</div>
+          <div class="ac-text">
+            <strong>200+ Interview Questions</strong>
+            <span>Carefully selected for senior-level roles</span>
+          </div>
+        </div>
+        <div class="ac">
+          <div class="ac-icon o">🗂️</div>
+          <div class="ac-text">
+            <strong>100+ Topics Covered</strong>
+            <span>From C# to Azure and everything between</span>
+          </div>
+        </div>
+        <div class="ac">
+          <div class="ac-icon r">🎯</div>
+          <div class="ac-text">
+            <strong>Interview-Ready Answers</strong>
+            <span>Structured, concise, and practical</span>
+          </div>
+        </div>
+        <div class="ac">
+          <div class="ac-icon c">🏗️</div>
+          <div class="ac-text">
+            <strong>System Design Diagrams</strong>
+            <span>Microservices, Clean Architecture &amp; more</span>
+          </div>
+        </div>
+        <div class="ac">
+          <div class="ac-icon g">⚡</div>
+          <div class="ac-text">
+            <strong>Cheat Sheets &amp; Quick References</strong>
+            <span>Print-ready PDFs for any device</span>
+          </div>
+        </div>
+        <div class="ac">
+          <div class="ac-icon o">🚀</div>
+          <div class="ac-text">
+            <strong>Full Stack Bonus Content</strong>
+            <span>React, .NET, SQL, Auth, Azure &amp; CI/CD</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WHY ══ -->
+<section id="why" class="why">
+  <div class="wrap">
+    <div class="s-eye">Why QuestSea</div>
+    <h2 class="s-head">Built for <em>Real</em> Career Growth</h2>
+    <p class="s-sub">Not just another tutorial site — QuestSea is engineered to help you perform better and grow faster.</p>
+    <div class="why-grid">
+      <div class="wyc">
+        <div class="wyc-num">01</div>
+        <h3>Save Valuable Time</h3>
+        <p>Curated, structured content so you focus on what matters — without wading through noise.</p>
+      </div>
+      <div class="wyc">
+        <div class="wyc-num">02</div>
+        <h3>Real-world Examples</h3>
+        <p>Every concept illustrated with production-grade examples drawn from real projects and interviews.</p>
+      </div>
+      <div class="wyc">
+        <div class="wyc-num">03</div>
+        <h3>Boost Interview Confidence</h3>
+        <p>Structured answers, common mistakes, and follow-up questions that mirror actual senior interviews.</p>
+      </div>
+      <div class="wyc">
+        <div class="wyc-num">04</div>
+        <h3>Structured &amp; Clear</h3>
+        <p>Clean formats — cheat sheets, tables, diagrams — that make complex topics easy to retain.</p>
+      </div>
+      <div class="wyc">
+        <div class="wyc-num">05</div>
+        <h3>Industry Best Practices</h3>
+        <p>Content built around SOLID, Clean Architecture, DDD, and the patterns teams actually use in production.</p>
+      </div>
+      <div class="wyc">
+        <div class="wyc-num">06</div>
+        <h3>Switch Jobs with Confidence</h3>
+        <p>From preparation to negotiation, QuestSea equips you at every stage of the job-switching journey.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<div class="cta">
+  <div class="cta-box">
+    <h2>Ready to Ace Your<br><em>Next .NET Interview?</em></h2>
+    <p>Download the complete Senior .NET Interview Guide 2026 — 200+ questions, real-world answers, system design diagrams, and cheat sheets, all in one PDF.</p>
+    <div class="cta-row">
+      <a href="senior-dotnet-interview-guide-2026.html" class="btn-g">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        View Interview Guide
+      </a>
+      <a href="https://www.youtube.com/@QuestSeaA" target="_blank" class="btn-o">
+        📺 YouTube Channel
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-grid">
+    <div class="f-brand">
+      <a href="index.html" class="logo">
+        <div class="logo-mark" style="width:30px;height:30px;font-size:15px;">🧭</div>
+        <span class="logo-text" style="font-size:1.1rem;">Quest<em>Sea</em></span>
+      </a>
+      <p>A technology learning platform dedicated to helping developers grow their skills and build successful careers through high-quality, practical resources.</p>
+    </div>
+    <div class="f-col">
+      <h5>Guides</h5>
+      <a href="senior-dotnet-interview-guide-2026.html">Senior .NET Guide 2026</a>
+      <a href="#">C# Deep Dive</a>
+      <a href="#">Full Stack Q&amp;A</a>
+      <a href="#">System Design</a>
+    </div>
+    <div class="f-col">
+      <h5>Topics</h5>
+      <a href="#">ASP.NET Core</a>
+      <a href="#">Entity Framework</a>
+      <a href="#">React &amp; TypeScript</a>
+      <a href="#">Azure &amp; DevOps</a>
+    </div>
+    <div class="f-col">
+      <h5>Company</h5>
+      <a href="#about">About QuestSea</a>
+      <a href="https://www.youtube.com/@QuestSeaA" target="_blank">YouTube Channel</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 <span>QuestSea</span> · Explore. Learn. Innovate.</p>
+    <div class="socials">
+      <a class="soc" href="https://www.youtube.com/@QuestSeaA" target="_blank">▶</a>
+      <a class="soc" href="#">𝕏</a>
+      <a class="soc" href="#">in</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
